@@ -5,6 +5,12 @@ from __future__ import print_function, division
 import aiwolfpy
 import aiwolfpy.contentbuilder as cb
 
+#printing of nested dicts
+from pprint import pformat
+from yapf.yapflib.yapf_api import FormatCode
+import json
+from tabulate import tabulate
+
 class SampleAgent(object):
 
 	def __init__(self, agent_name):
@@ -17,11 +23,11 @@ class SampleAgent(object):
 		self.base_info = base_info
 		self.game_setting = game_setting
 		self.printGameSetting(game_setting)
-		self.printBaseInfo(base_info)
-		self.printDiffData(diff_data)
 
 	def update(self, base_info, diff_data, request):
 		self.base_info = base_info
+		self.printBaseInfo(base_info)
+		self.printDiffData(diff_data)
 
 	def dayStart(self):
 		return None
@@ -49,24 +55,16 @@ class SampleAgent(object):
 
 	def printBaseInfo(self, base_info):
 		print("Base Info:")
-		print(base_info)
-		#for key in base_info.keys():
-		#	print(str(key)+":")
-		#	print(base_info[key])
+		print(json.dumps(base_info, indent=4))
 
 	def printGameSetting(self, game_setting):
 		print("Game Setting:")
-		print(game_setting)
-		#for key in game_setting.keys():
-		#	print(str(key)+":")
-		#	print(game_setting[key])
+		print(json.dumps(game_setting, indent=4))
 		
 	def printDiffData(self, diff_data):
 		print("Diff Data:")
-		print(diff_data)
-		#for key in diff_data.keys():
-		#	print(str(key)+":")
-		#	print(diff_data[key])
+		#print(json.dumps(diff_data, indent=4))
+		print(tabulate(diff_data, headers='keys', tablefmt='psql'))
 
 if __name__ == '__main__':	
 	aiwolfpy.connect_parse(SampleAgent("myagent"))
