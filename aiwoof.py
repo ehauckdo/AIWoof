@@ -111,4 +111,4 @@ class SampleAgent(object):
 		return ids
 
 if __name__ == '__main__':	
-	aiwolfpy.connect_parse(SampleAgent("myagent"))
+	aiwolfpy.connect_parse(SampleAgent("AIWoof"))
