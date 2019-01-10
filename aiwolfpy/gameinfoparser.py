@@ -1,5 +1,6 @@
 from __future__ import print_function, division 
 import pandas as pd
+import json
 
 class GameInfoParser(object):
     
@@ -55,6 +56,8 @@ class GameInfoParser(object):
         # talk
         # update talklist
         if request == 'TALK' or request == 'DAILY_FINISH':
+            #print("INSIDE GameInfoParser - TALK")
+            #print(json.dumps(game_info, indent=4))
             for t in talk_history:
                 self.pd_dict["day"].append(t["day"])
                 self.pd_dict["type"].append("talk")
@@ -83,9 +86,9 @@ class GameInfoParser(object):
                 for v in game_info['voteList']:
                     self.pd_dict["day"].append(v["day"])
                     self.pd_dict["type"].append("vote")
-                    self.pd_dict["idx"].append(v["agent"])
+                    self.pd_dict["idx"].append(0)
                     self.pd_dict["turn"].append(0)
-                    self.pd_dict["agent"].append(v["target"])
+                    self.pd_dict["agent"].append(v["agent"])
                     self.pd_dict["text"].append('VOTE Agent[' + "{0:02d}".format(v["target"]) + ']')
                     
             # EXECUTE
@@ -102,28 +105,29 @@ class GameInfoParser(object):
                 m = game_info['mediumResult']
                 self.pd_dict["day"].append(m['day'])
                 self.pd_dict["type"].append("identify")
-                self.pd_dict["idx"].append(m['agent'])
+                self.pd_dict["idx"].append(0)
                 self.pd_dict["turn"].append(0)
-                self.pd_dict["agent"].append(game_info['executedAgent'])
+                self.pd_dict["agent"].append(game_info['agent'])
                 self.pd_dict["text"].append('IDENTIFIED Agent[' + "{0:02d}".format(m['target']) + '] ' + m['result'])
                 
             # DIVINE
             if game_info['divineResult'] is not None:
                 d = game_info['divineResult']
+                #print(json.dumps(d, indent=4))
                 self.pd_dict["day"].append(d['day'] - 1)
                 self.pd_dict["type"].append("divine")
-                self.pd_dict["idx"].append(d['agent'])
+                self.pd_dict["idx"].append(0)
                 self.pd_dict["turn"].append(0)
-                self.pd_dict["agent"].append(d['target'])
+                self.pd_dict["agent"].append(d['agent'])
                 self.pd_dict["text"].append('DIVINED Agent[' + "{0:02d}".format(d['target']) + '] ' + d['result'])
                 
             # GUARD
             if game_info['guardedAgent'] != -1:
                 self.pd_dict["day"].append(game_info['day'] - 1)
                 self.pd_dict["type"].append("guard")
-                self.pd_dict["idx"].append(self.agentIdx)
+                self.pd_dict["idx"].append(0)
                 self.pd_dict["turn"].append(0)
-                self.pd_dict["agent"].append(game_info['guardedAgent'])
+                self.pd_dict["agent"].append(game_info['agent'])
                 self.pd_dict["text"].append('GUARDED Agent[' + "{0:02d}".format(game_info['guardedAgent']) + ']')
                 
             # ATTACK_VOTE
@@ -131,9 +135,9 @@ class GameInfoParser(object):
             for v in game_info['attackVoteList']:
                 self.pd_dict["day"].append(v["day"])
                 self.pd_dict["type"].append("attack_vote")
-                self.pd_dict["idx"].append(v["agent"])
+                self.pd_dict["idx"].append(0)
                 self.pd_dict["turn"].append(0)
-                self.pd_dict["agent"].append(v["target"])
+                self.pd_dict["agent"].append(v["agent"])
                 self.pd_dict["text"].append('ATTACK Agent[' + "{0:02d}".format(v["target"]) + ']')
                                 
             # ATTACK
@@ -142,7 +146,7 @@ class GameInfoParser(object):
                 self.pd_dict["type"].append("attack")
                 self.pd_dict["idx"].append(0)
                 self.pd_dict["turn"].append(0)
-                self.pd_dict["agent"].append(game_info['attackedAgent'])
+                self.pd_dict["agent"].append(game_info['agent'])
                 self.pd_dict["text"].append('ATTACK Agent[' + "{0:02d}".format(game_info['attackedAgent']) + ']')
                 
             # DEAD
@@ -163,12 +167,14 @@ class GameInfoParser(object):
             # VOTE
             if 'latestVoteList' in game_info.keys():
                 # valid vote
+                #print("INSIDE GameInfoParser - latestVoteList")
+                #print(json.dumps(game_info, indent=4))
                 for v in game_info['latestVoteList']:
                     self.pd_dict["day"].append(v["day"])
                     self.pd_dict["type"].append("vote")
-                    self.pd_dict["idx"].append(v["agent"])
+                    self.pd_dict["idx"].append(0)
                     self.pd_dict["turn"].append(0)
-                    self.pd_dict["agent"].append(v["target"])
+                    self.pd_dict["agent"].append(v["agent"])
                     self.pd_dict["text"].append('VOTE Agent[' + "{0:02d}".format(v["target"]) + ']')
                     
             # EXECUTE
@@ -188,25 +194,29 @@ class GameInfoParser(object):
         elif request == 'VOTE':
             # VOTE
             if 'latestVoteList' in game_info.keys():
+                #print("INSIDE GameInfoParser - latestVoteList (REVOTE)")
+                #print(json.dumps(game_info, indent=4))
                 # valid vote
                 for v in game_info['latestVoteList']:
                     self.pd_dict["day"].append(v["day"])
                     self.pd_dict["type"].append("vote")
-                    self.pd_dict["idx"].append(v["agent"])
+                    self.pd_dict["idx"].append(0)
                     self.pd_dict["turn"].append(-1)
-                    self.pd_dict["agent"].append(v["target"])
+                    self.pd_dict["agent"].append(v["agent"])
                     self.pd_dict["text"].append('VOTE Agent[' + "{0:02d}".format(v["target"]) + ']')
                     
         # REATTACKVOTE
         elif request == 'ATTACK':
             # ATTACK_VOTE 
+            #print("INSIDE GameInfoParser - latestAttackVoteList (REVOTE)")
+            #print(json.dumps(game_info, indent=4))
             if 'latestAttackVoteList' in game_info.keys():
                 for v in game_info['latestAttackVoteList']:
                     self.pd_dict["day"].append(v["day"])
                     self.pd_dict["type"].append("attack_vote")
-                    self.pd_dict["idx"].append(v["agent"])
+                    self.pd_dict["idx"].append(0)
                     self.pd_dict["turn"].append(-1)
-                    self.pd_dict["agent"].append(v["target"])
+                    self.pd_dict["agent"].append(v["agent"])
                     self.pd_dict["text"].append('ATTACK Agent[' + "{0:02d}".format(v["target"]) + ']')
         
         # FINISH

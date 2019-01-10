@@ -124,6 +124,7 @@ def connect_parse(agent):
                     for k in ["day", "remainTalkMap", "remainWhisperMap", "statusMap"]:
                         if k in game_info.keys():
                             base_info[k] =  game_info[k]
+                    #print("INSIDE tcpip-VOTE")
                     parser.update(game_info, talk_history, whisper_history, request)
                     agent.update(base_info, parser.get_gamedf_diff(), request)
                     # call
@@ -151,6 +152,7 @@ def connect_parse(agent):
                     for k in ["day", "remainTalkMap", "remainWhisperMap", "statusMap"]:
                         if k in game_info.keys():
                             base_info[k] =  game_info[k]
+                    #print("INSIDE tcpip-DIVINE")
                     parser.update(game_info, talk_history, whisper_history, request)
                     agent.update(base_info, parser.get_gamedf_diff(), request)
                     # call
@@ -160,6 +162,7 @@ def connect_parse(agent):
                     for k in ["day", "remainTalkMap", "remainWhisperMap", "statusMap"]:
                         if k in game_info.keys():
                             base_info[k] =  game_info[k]
+                    #print("INSIDE tcpip-TALK")
                     parser.update(game_info, talk_history, whisper_history, request)
                     agent.update(base_info, parser.get_gamedf_diff(), request)
                     # call
