@@ -2,13 +2,15 @@
 
 Quoting from [aiwolf.org](http://aiwolf.org/en/introduction):
 
-> a project to create an “Artificial Intelligence Werewolf” (AIWolf) to play as the werewolf in place of a human player. The objective of this comprehensive project is not only to develop a game-playing algorithm, but also to develop virtual agents, real robots, and so on. The We
+> a project to create an “Artificial Intelligence Werewolf” (AIWolf) to play as the werewolf in place of a human player. The objective of this comprehensive project is not only to develop a game-playing algorithm, but also to develop virtual agents, real robots, and so on. 
 
 The AI Competition currently has 2 branches, one protocol-based where agents can use a predefined grammar to communicate, and one NLP-based. This repository has information on the protocol-based branch of the competition.
 
+To learn the rules and how to play the Werewolf game, please refer to [this website](https://www.playwerewolf.co/rules/) 
+
 # AIWolf Protocol Specification (ver2.01, 2017)
 
-This guide will include keywords, sentences, operators and grammar related to the protocol specification of the AIWolf competition.
+This guide will include keywords, sentences, operators and grammar related to the protocol specification of the AIWolf competition. The official specification for the competition (in Japanese) can be found [here](http://aiwolf.org/control-panel/wp-content/uploads/2014/03/protocol_2017-2.pdf).
 
 * List of keywords used for building sentences and their usage: 
 
@@ -22,7 +24,7 @@ This guide will include keywords, sentences, operators and grammar related to th
 
   * Sentences that express ideas or intention from the player
   
-    * [subject] ESTIMATE [target] [role] *(The [subject] is estimating that [target] is [role])*
+    * [subject] ESTIMATE [target] [role] *(The [subject] is suggesting that [target] could be [role])*
     * [subject] COMINGOUT  [target][role] *(The [subject] is stating that [target] is [role])*
 
   * Sentences for basic actions of a Werewolf game
@@ -79,8 +81,8 @@ Same as in the previous section, subject can be also be omitted here.
 * How requests are interpreted
 	
 	* REQUEST ([subject] ESTIMATE [target] [role])
-		* if [subject] is present: *[subject], please assume that [target] is [role]*
-		* if there is no subject: *everyone, please assume that [target] is [role]*
+		* if [subject] is present: *[subject], please suggest that [target] could be a [role]*
+		* if there is no subject: *everyone, please suggest that [target] could be a [role]*
 
 	* REQUEST ([subject] COMINGOUT [target] [role])
 		* if [subject] is present: *[subject], please report that [target] is [role]*
@@ -103,29 +105,29 @@ Same as in the previous section, subject can be also be omitted here.
 		* if there is no subject: *let's attack [target]*
 
 	* REQUEST ([subject] DIVINED [target] [species])*
-		* if [subject] is present: [subject], please report that result of divination on [target] is [species]
-		* if there is no subject: please, someone perform divination on [target]
+		* if [subject] is present: *[subject], please report that result of divination on [target] is [species]*
+		* if there is no subject: *please, someone perform divination on [target]*
 
 	* REQUEST ([subject] IDENTIFIED  [target] [species])
-		* if [subject] is present:[subject], please report that [target] was a [species]
-		* if there is no subject: someone, please report that [target] was a [species]
+		* if [subject] is present: *[subject], please report that [target] was a [species]*
+		* if there is no subject: *someone, please report that [target] was a [species]*
 
 	* REQUEST ([subject] GUARDED  [target])
-		* if [subject] is present: [subject], please report that you protected [target]
-		* if there is no subject: someone, please report that you protected [target]
+		* if [subject] is present: *[subject], please report that you protected [target]*
+		* if there is no subject: *someone, please report that you protected [target]*
 
 	* REQUEST ([subject] AGREE  [talk number])
-		* if [subject] is present: [subject], please report that you agree with [talk number]
-		* if there is no subject: everyone, please report that you agree with [talk number]
+		* if [subject] is present: *[subject], please report that you agree with [talk number]*
+		* if there is no subject: *everyone, please report that you agree with [talk number]*
 
 	* REQUEST ([subject] DISAGREE  [talk number])
-		* if [subject] is present: [subject], please report that you disagree with [talk number]
-		* if there is no subject: everyone, please report that you disagree with [talk number]
+		* if [subject] is present: *[subject], please report that you disagree with [talk number]*
+		* if there is no subject: *everyone, please report that you disagree with [talk number]*
 
 	* REQUEST ([subject] OVER)
-		* if [subject] is present:[subject], please finish your talking for now
-		* if there is no subject:everyone, please finish your talking for now
+		* if [subject] is present: *[subject], please finish your talking for now*
+		* if there is no subject: *everyone, please finish your talking for now*
 
 	* REQUEST ([subject] SKIP)
-		* if [subject] is present:[subject], don't say anything for this turn
-		* if there is no subject: everyone, don't say anything for this turn
+		* if [subject] is present: *[subject], don't say anything for this turn*
+		* if there is no subject: *everyone, please don't say anything for this turn*
