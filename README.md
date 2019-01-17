@@ -20,7 +20,7 @@ This guide will include keywords, sentences, operators and grammar related to th
 
 * Sentences: (13 different types in total)
 
-  * Sentences that express ideas or intetion from the player
+  * Sentences that express ideas or intention from the player
   
     * [subject] ESTIMATE [target] [role] *(The [subject] is estimating that [target] is [role])*
     * [subject] COMINGOUT  [target][role] *(The [subject] is stating that [target] is [role])*
@@ -34,8 +34,8 @@ This guide will include keywords, sentences, operators and grammar related to th
 
   * Sentences that express the result of a certain action
 
-	  * [subject] DIVINED [target] [species]
-    * [subject] IDENTIFIED [target] [species]
+    * [subject] DIVINED [target] [species]
+    * [subject] IDENTIFIED [target] [species]*
     * [subject] GUARDED [target]
 
 *(keyword INQUESTED was used before 2017) 
@@ -51,3 +51,81 @@ This guide will include keywords, sentences, operators and grammar related to th
     * [subject] SKIP *(skip current round only)*
     
 For each of the previous sentences, the subject is always present before the verb. However, the subject can be omitted. In this case, the subject is determined by the context: if stated by a certain speaker, the subject becomes the speaker, otherwise it comes indefinite (all applicable players).
+
+* Operators: used to frame sentences and link them to other subjects or sentences
+
+	* [subject] REQUEST ([sentence])
+
+Same as in the previous section, subject can be also be omitted here.
+
+* Grammar
+
+    * A statement consists of one or more sentences
+    * Sentences can be separated by parentheses
+    * You can use an operator before a sentence
+    * The sentence following an operator is delimited by parentheses. 
+    * Although a [subject] is required, if omitted, the speaker is regarded as the subject.
+
+* Example Sentences 
+
+	* COMINGOUT Agent1 SEER　 　　　　　　　*(a declaration that Agent1 is a seer)* 
+	* Agent0 COMINGOUT Agent0 SEER　　　　*(Agent0 declares himself as a seer)*
+	* DIVINED Agent1 HUMAN 　　　　　　　　　*(the divination shows that Agent1 is a Human)*
+	* Agent0 DIVINED Agent2 WEREWOLF　　　*(the divination by Agent0 shows that Agent2 is a Werewolf)*  
+	* REQUEST (Agent2 DIVINATION Agent3)　　*(a request is made to Agent2 to perform divination on Agent3)*
+	* GUARD Agent2 			　　　　　　　　　　　　　　*(to protect Agent2)*
+	* Agent1 REQUEST (Agent0 GUARD Agent3)　*(Agent1 requests that Agent0 protects Agent3)*
+
+* How requests are interpreted
+	
+	* REQUEST ([subject] ESTIMATE [target] [role])
+		* if [subject] is present: *[subject], please assume that [target] is [role]*
+		* if there is no subject: *everyone, please assume that [target] is [role]*
+
+	* REQUEST ([subject] COMINGOUT [target] [role])
+		* if [subject] is present: *[subject], please report that [target] is [role]*
+		* if there is no subject: *someone, please report that [target] is [role]*
+ 
+	* REQUEST ([subject] DIVINATION [target])
+		* if [subject] is present: *[subject], please perform divination on [target]*
+		* if there is no subject: *let's perform divination on [target]*
+
+	* REQUEST ([subject] GUARD [target])
+		* if [subject] is present: *[subject], please protect [target]*
+		* if there is no subject: *let's protect [target]*
+
+	* REQUEST ([subject] VOTE [target])
+		* if [subject] is present: *[subject], please vote on [target]*
+		* if there is no subject: *let's vote on [target]*
+
+	* REQUEST ([subject] ATTACK [target])
+		* if [subject] is present: *[subject], please attack [target]*
+		* if there is no subject: *let's attack [target]*
+
+	* REQUEST ([subject] DIVINED [target] [species])*
+		* if [subject] is present: [subject], please report that result of divination on [target] is [species]
+		* if there is no subject: please, someone perform divination on [target]
+
+	* REQUEST ([subject] IDENTIFIED  [target] [species])
+		* if [subject] is present:[subject], please report that [target] was a [species]
+		* if there is no subject: someone, please report that [target] was a [species]
+
+	* REQUEST ([subject] GUARDED  [target])
+		* if [subject] is present: [subject], please report that you protected [target]
+		* if there is no subject: someone, please report that you protected [target]
+
+	* REQUEST ([subject] AGREE  [talk number])
+		* if [subject] is present: [subject], please report that you agree with [talk number]
+		* if there is no subject: everyone, please report that you agree with [talk number]
+
+	* REQUEST ([subject] DISAGREE  [talk number])
+		* if [subject] is present: [subject], please report that you disagree with [talk number]
+		* if there is no subject: everyone, please report that you disagree with [talk number]
+
+	* REQUEST ([subject] OVER)
+		* if [subject] is present:[subject], please finish your talking for now
+		* if there is no subject:everyone, please finish your talking for now
+
+	* REQUEST ([subject] SKIP)
+		* if [subject] is present:[subject], don't say anything for this turn
+		* if there is no subject: everyone, don't say anything for this turn
