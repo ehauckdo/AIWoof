@@ -6,7 +6,21 @@ Quoting from [aiwolf.org](http://aiwolf.org/en/introduction):
 
 The AI Competition currently has 2 branches, one protocol-based where agents can use a predefined grammar to communicate, and one NLP-based. This repository has information on the protocol-based branch of the competition.
 
-To learn the rules and how to play the Werewolf game, please refer to [this website](https://www.playwerewolf.co/rules/) 
+To learn the rules and how to play the Werewolf game, please refer to [this website](https://werewolf.chat/Main_Page)
+
+# Roles in AIWolf
+
+## Villager Team Roles
+
+* Villager: regular villager role, no special abilities
+* Seer: has the ability to discover if someone is a werewolf or a human during each night phase
+* Medium: has the ability to discover if someone who was voted and exiled from the village was a werewolf or not
+* Bodyguard: has the ability to protect someone or himself every day 
+
+## Werewolf Team Roles
+
+* Werewolf: has the ability to kill predate one villager everyday. All werewolves need to agree on who to attack.
+* Possessed: a regular villager, but alligned with the werewolf team
 
 # AIWolf Protocol Specification (ver2.01, 2017)
 
