@@ -19,7 +19,7 @@ To learn the rules and how to play the Werewolf game, please refer to [this webs
 
 ### Werewolf Team Roles
 
-* Werewolf: has the ability to kill predate one villager everyday. All werewolves need to agree on who to attack.
+* Werewolf: has the ability to predate one villager everyday. All werewolves need to agree on who to attack.
 * Possessed: a regular villager, but alligned with the werewolf team
 
 # AIWolf Protocol Specification (ver2.01, 2017)
