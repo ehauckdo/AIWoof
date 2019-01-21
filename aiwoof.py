@@ -105,7 +105,7 @@ class SampleAgent(object):
 
 	def getAlivePlayerIds(self):
 		ids = []
-		for key,value in self.base_info["statusMap"].iteritems():
+		for key,value in self.base_info["statusMap"].items():
 			if value == "ALIVE" and int(key) != self.base_info["agentIdx"]:
 				ids.append(int(key))
 		return ids
