@@ -11,6 +11,8 @@ from tabulate import tabulate
 
 import time
 import random
+import optparse
+import sys
 
 class SampleAgent(object):
 
@@ -110,5 +112,25 @@ class SampleAgent(object):
 				ids.append(int(key))
 		return ids
 
+def parseArgs(args):
+	usage = "usage: %prog [options]"
+	parser = optparse.OptionParser(usage=usage) 
+
+	# need this to ensure -h can be used as an option
+	parser.set_conflict_handler("resolve")
+
+	parser.add_option('-h', action="store", type="string", dest="hostname",
+		help="IP address of the AIWolf server", default=None)
+	parser.add_option('-p', action="store", type="int", dest="port", 
+		help="Port to connect in the server", default=None)
+	parser.add_option('-r', action="store", type="string", dest="port", 
+		help="Role request to the server", default=-1)
+	
+	(opt, args) = parser.parse_args()
+	if opt.hostname == None or opt.port == -1:
+		parser.print_help()
+		sys.exit()
+
 if __name__ == '__main__':	
+	parseArgs(sys.argv[1:])
 	aiwolfpy.connect_parse(SampleAgent("AIWoof"))
