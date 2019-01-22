@@ -28,7 +28,7 @@ The AIWolf framework is developed in Java and therefore, the primary way of deve
 
 However, the AIWolf competition is run on a server, and each agent connects to this server via sockets. Therefore, as long as you can develop a program which can connect to a server via sockets and receive/submit strings, any programming language should be usable in this platform. However, the organizers need to be able to execute the code during competitions, therefore, only a few languages are officially supported. Python is one of them.
 
-The first Python implementation for AIWolf can be found at [Kei Harada's repository](https://github.com/k-harada/AIWolfPy). The current repository the same code with minor changes in code.
+The first Python implementation for AIWolf can be found at [Kei Harada's repository](https://github.com/k-harada/AIWolfPy). The current repository has the same code with minor changes.
 
 ### Setting up a server
 
