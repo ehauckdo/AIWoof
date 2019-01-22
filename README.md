@@ -22,6 +22,36 @@ To learn the rules and how to play the Werewolf game, please refer to [this webs
 * Werewolf: has the ability to predate one villager everyday. All werewolves need to agree on who to attack.
 * Possessed: a regular villager, but alligned with the werewolf team
 
+# Executing a Python-based agent
+
+The AIWolf framework is developed in Java and therefore, the primary way of developing an agent for the competition is by using the [java files offered on the official website](http://aiwolf.org/en/server). Basic instructions in English on which classes to inherit from are provided.
+
+However, the AIWolf competition is run on a server, and each agent connects to this server via sockets. Therefore, as long as you can develop a program which can connect to a server via sockets and receive/submit strings, any programming language should be usable in this platform. However, the organizers need to be able to execute the code during competitions, therefore, only a few languages are officially supported. Python is one of them.
+
+The first Python implementation for AIWolf can be found at [Kei Harada's repository](https://github.com/k-harada/AIWolfPy). The current repository the same code with minor changes in code.
+
+### Setting up a server
+
+Before running your agent, you need to set up a server. 
+
+First download the latest [server files](http://aiwolf.org/en/server) from the website (aiwolf-ver0.4.*). 
+
+The simplest way to execute the server is using the GUI mode. For that, simply navigate to the unzipped folder and run
+
+```
+./StartServer.sh
+```
+
+From there, you selected the number of players in the GUI interface, press Connect, and the server is ready for you python-based agent to connect. Additionaly, you can run the StartGUIClient.sh and connect java-base agents to server as well (including the sample ones provided by the competition).
+
+Once the server is set up, you can connect the sample python agent in this repository by executing
+
+```
+./aiwoof.py -h localhost -p 10000
+```
+
+You can also request a role to the server by passing -r [ROLE] as an argument (roles can be VILLAGER, SEER, MEDIUM, BODYGUARD, POSSESSED, WEREWOLF).
+
 # AIWolf Protocol Specification (ver2.01, 2017)
 
 This guide will include keywords, sentences, operators and grammar related to the protocol specification of the AIWolf competition. The official specification for the competition (in Japanese) can be found [here](http://aiwolf.org/control-panel/wp-content/uploads/2014/03/protocol_2017-2.pdf).
