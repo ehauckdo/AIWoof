@@ -36,7 +36,9 @@ Before running your agent, you need to set up a server.
 
 First download the latest [server files](http://aiwolf.org/en/server) from the website (aiwolf-ver0.4.*). 
 
-The simplest way to execute the server is using the GUI mode. For that, simply navigate to the unzipped folder and run
+#### GUI mode
+
+The first and simplest way to execute the server is using the GUI mode. Simply navigate to the unzipped folder and run
 
 ```
 ./StartServer.sh
@@ -44,7 +46,34 @@ The simplest way to execute the server is using the GUI mode. For that, simply n
 
 From there, you selected the number of players in the GUI interface, press Connect, and the server is ready for you python-based agent to connect. Additionaly, you can run the StartGUIClient.sh and connect java-base agents to server as well (including the sample ones provided by the competition).
 
-Once the server is set up, you can connect the sample python agent in this repository by executing
+#### Terminal mode
+
+Using the GUI mode you can not automatically run a certain number of games, which can be a problem for testing.
+
+The second option is using the terminal mode. For that you have to open the AutoStarter.ini and configure the parameters properly
+
+```
+lib=./	
+log=./log/			#folder to save logs
+port=10000			#port to connect
+game=10				#number of games to run
+view=false			#show the game GUI
+setting=./SampleSetting.cfg	#game related settings
+agent=5 			#number of agents to play
+Sample1,org.aiwolf.sample.player.SampleRoleAssignPlayer #list of java agents to connect
+Sample2,org.aiwolf.sample.player.SampleRoleAssignPlayer #jar files must be on the same folder
+Sample3,org.aiwolf.sample.player.SampleRoleAssignPlayer 
+Sample4,org.aiwolf.sample.player.SampleRoleAssignPlayer
+```
+If you want to connect a python-based agent, simply leave less java-based clients in the agent list than the total number of agents specified (alternatively, leave the agent list empty and connect only python-based clients). The server is going to wait for connections until the specified number of agents is met. After configuring the AutoStarter.ini file, you can execute the server in terminal mode by running
+
+```
+./AutoStarter.sh
+```
+
+### Connecting the Python-based agent
+
+Once the server is set up, you can connect the sample python agent in the current repository by executing
 
 ```
 ./aiwoof.py -h localhost -p 10000
