@@ -35,9 +35,9 @@ There are two formats of games being run at the AIWolf competition: with 5 or 15
 | Medium    | - | 1 |
 | Bodyguard | - | 1 |
 
-The following fluxogram (adapted from the original 4th AIWolf Competition regulation document) describes the flow of a Werewolf game in the competition platform: 
+The following fluxogram (adapted from the original [4th AIWolf Competition regulation document](https://github.com/ehauckdo/AIWoof/blob/master/docs/4th_AIWolf_Competition_Rules.pdf)) describes the flow of a Werewolf game in the competition platform: 
 
-![AIWolf Fluxogram](https://github.com/ehauckdo/AIWoof/tree/master/docs/aiwolf_fluxogram.png "Fluxogram of a Werewolf game")
+![alt text](https://github.com/ehauckdo/AIWoof/blob/master/docs/aiwolf_fluxogram.png "Fluxogram of a Werewolf game")
 
 # Executing a Python-based agent
 
