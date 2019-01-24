@@ -73,7 +73,15 @@ If you want to connect a python-based agent, simply leave less java-based client
 
 ### Connecting the Python-based agent
 
-Once the server is set up, you can connect the sample python agent in the current repository by executing
+To execute the python script, you need a few libraries including numpy, pandas, etc. To check which libraries and which versions you need, check the requirements.txt file in the root folder. You can install all of them at once by running:
+
+```
+pip install -r requirements
+```
+
+It is highly recommended to setup a virtual environment before running this command, to assure there will be no conflicits with already installed libraries. You can check how to install virtualenv and how to create a new environment [here](https://packaging.python.org/guides/installing-using-pip-and-virtualenv/).
+
+Once the server is set up and you have the required libraries, you can connect the sample python agent in the current repository by executing
 
 ```
 ./aiwoof.py -h localhost -p 10000
