@@ -2,6 +2,11 @@
 # -*- coding: utf-8 -*-
 from __future__ import print_function, division
 
+# Sample random python-based agent for AIWolf
+# Based on https://github.com/k-harada/AIWolfPy
+# Developed for aiwolf 0.4.12 (2018/06/16)
+# Author: ehauckdo
+
 import aiwolfpy
 import aiwolfpy.contentbuilder as cb
 
