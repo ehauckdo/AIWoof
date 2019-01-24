@@ -22,6 +22,23 @@ To learn the rules and how to play the Werewolf game, please refer to [this webs
 * Werewolf: has the ability to predate one villager everyday. All werewolves need to agree on who to attack.
 * Possessed: a regular villager, but alligned with the werewolf team
 
+# AIWolf Competition General Rules
+
+There are two formats of games being run at the AIWolf competition: with 5 or 15 players each game. The role distribution happens as fololows:
+
+| Role      | 5 Players  | 15 Players |
+| --------- | ----------:| ----------:|
+| Villager  | 2 | 8 |
+| Seer      | 1 | 1 |
+| Possessed | 1 | 1 |
+| Werewolf  | 1 | 3 |
+| Medium    | - | 1 |
+| Bodyguard | - | 1 |
+
+The following fluxogram (adapted from the original 4th AIWolf Competition regulation document) describes the flow of a Werewolf game in the competition platform: 
+
+![AIWolf Fluxogram](https://github.com/ehauckdo/AIWoof/tree/master/docs/aiwolf_fluxogram.png "Fluxogram of a Werewolf game")
+
 # Executing a Python-based agent
 
 The AIWolf framework is developed in Java and therefore, the primary way of developing an agent for the competition is by using the [java files offered on the official website](http://aiwolf.org/en/server). Basic instructions in English on which classes to inherit from are provided.
