@@ -51,18 +51,28 @@ class SampleAgent(object):
 	def talk(self):
 		#time.sleep (self.sleeptime)
 		print(self.getTimeStamp()+" inside Talk")
+
 		if self.current_target is None:
 			selected = self.randomPlayerId()
 			print("")
 			print("Talk Selected Randomnly. Selected ID: "+str(selected))
-			return cb.vote(selected)
+			self.setTarget(selected, False)
+			#self.current_target = {}
+			#self.current_target["id"] = selected
+			#self.current_target["estimated"] = True
+			#self.current_target["revenge"] = False
+			#return cb.vote(selected)
+		
+		if self.current_target["revenge"] is False:
+			print("Voting randomnly!")
 		else:
-			print("Voting against enemy!")
-			if self.current_target["estimated"] == False:
-				self.current_target["estimated"] = True
-				return cb.estimate(self.current_target["id"], "WEREWOLF")
-			else:
-				return cb.vote(self.current_target["id"])
+			print("Voting for revenge!")
+
+		if self.current_target["estimated"] == False:
+			self.current_target["estimated"] = True
+			return cb.estimate(self.current_target["id"], "WEREWOLF")
+		else:
+			return cb.vote(self.current_target["id"])
 
 	def whisper(self):
 		print(self.getTimeStamp()+" inside Whisper")
@@ -149,9 +159,17 @@ class SampleAgent(object):
 			# we start doing the same to him
 			if "{:02d}".format(self.id) in text:
 				if "ESTIMATE" in text or "VOTE" in text:
-					self.current_target = {}
-					self.current_target["id"] = agent
-					self.current_target["estimated"] = False
+					self.setTarget(agent, True)
+					#self.current_target = {}
+					#self.current_target["id"] = agent
+					#self.current_target["estimated"] = False
+
+	def setTarget(self, id, revenge):
+		self.current_target = {}
+		self.current_target["id"] = id
+		self.current_target["revenge"] = revenge
+		self.current_target["estimated"] = False
+
 
 
 def parseArgs(args):
