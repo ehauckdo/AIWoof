@@ -24,55 +24,69 @@ class SampleAgent(object):
 	def __init__(self, agent_name):
 		self.myname = agent_name
 		self.sleeptime = 0.1
-		self.game_history = {}
 
 	def getName(self):
 		return self.myname
 
 	def initialize(self, base_info, diff_data, game_setting):
+		self.id = base_info["agentIdx"]
 		self.base_info = base_info
 		self.game_setting = game_setting
-		self.printGameSetting(game_setting)
 
-		self.id = base_info["agentIdx"]
+		self.game_history = {}
+		self.player_map = {}
+		self.target_list = []
 		self.current_target = None
 
+		self.printGameSetting(game_setting)
+		self.updatePlayerMap(base_info)
+
 	def update(self, base_info, diff_data, request):
-		self.base_info = base_info
 		print(self.getTimeStamp()+" inside Update")
+		self.base_info = base_info
+		
 		self.printBaseInfo(base_info)
 		self.printDiffData(diff_data)
+		
 		self.updateGameHistory(diff_data)
+		self.updatePlayerMap(base_info)
 
 	def dayStart(self):
 		print(self.getTimeStamp()+" inside dayStart")
+
+		# at the start of each day, either assign a new random target
+		# or fetch a new target from the target list (agents who previously voted against us)
+		if self.current_target is None or self.player_map[str(self.current_target)]["status"] == "DEAD":
+			
+			while len(self.target_list) > 0:
+				selected = self.setTarget.pop(0)
+				if self.player_map[selected]["status"] != "DEAD":
+					print("Selecting new target from target_list... Selected ID: "+str(selected))
+					self.setTarget(selected, True)
+					break
+				else:
+					continue
+			else:
+				selected = self.randomPlayerId()
+				print("Selecting a random target... Selected ID: "+str(selected))
+				self.setTarget(selected, False)
+
 		return None
 
 	def talk(self):
 		#time.sleep (self.sleeptime)
 		print(self.getTimeStamp()+" inside Talk")
-
-		if self.current_target is None:
-			selected = self.randomPlayerId()
-			print("")
-			print("Talk Selected Randomnly. Selected ID: "+str(selected))
-			self.setTarget(selected, False)
-			#self.current_target = {}
-			#self.current_target["id"] = selected
-			#self.current_target["estimated"] = True
-			#self.current_target["revenge"] = False
-			#return cb.vote(selected)
 		
-		if self.current_target["revenge"] is False:
-			print("Voting randomnly!")
+		if self.player_map[str(self.current_target)]["revenge"] is False: 
+			print("Voting on random target")
 		else:
 			print("Voting for revenge!")
 
-		if self.current_target["estimated"] == False:
-			self.current_target["estimated"] = True
-			return cb.estimate(self.current_target["id"], "WEREWOLF")
+		if self.player_map[str(self.current_target)]["estimated"] == False: 
+			self.player_map[str(self.current_target)]["estimated"] = True
+			return cb.estimate(self.current_target, "WEREWOLF")
 		else:
-			return cb.vote(self.current_target["id"])
+			return cb.vote(self.current_target)
 
 	def whisper(self):
 		print(self.getTimeStamp()+" inside Whisper")
@@ -140,6 +154,23 @@ class SampleAgent(object):
 				ids.append(int(key))
 		return ids
 
+	def updatePlayerMap(self, base_info):
+		if self.player_map == None:
+			self.player_map = {}
+		
+		for key, value in base_info["statusMap"].items():
+			if key is not self.id:
+				if key not in self.player_map:
+					self.player_map[key] = {}
+					self.player_map[key]["estimated"] = False
+					self.player_map[key]["revenge"] = False
+				self.player_map[key]["status"] = value
+				if value == "DEAD" and self.current_target == int(key):
+					selected = self.randomPlayerId()
+					print("Previous target is dead, selecting a new one. Selected ID: "+str(selected))
+					self.setTarget(selected, False)			
+
+
 	def updateGameHistory(self, diff_data):
 
 		for row in diff_data.itertuples():
@@ -155,22 +186,25 @@ class SampleAgent(object):
 			agent = getattr(row, "agent")
 			text = getattr(row, "text")
 
-			# if anyone votes or estimate on our agent
-			# we start doing the same to him
+			# if anyone votes, estimates, or divines on our agent
+			# we set this person as a target
 			if "{:02d}".format(self.id) in text:
-				if "ESTIMATE" in text or "VOTE" in text:
-					self.setTarget(agent, True)
-					#self.current_target = {}
-					#self.current_target["id"] = agent
-					#self.current_target["estimated"] = False
+				if "ESTIMATE" in text or "VOTE" in text or ("DIVINED" in text and "WEREWOLF" in text):
+					
+					# if we are pursuing revenge against someone already, add this 
+					# new agent to the target liost
+					if self.player_map[str(self.current_target)]["revenge"] == True:
+						self.target_list.append(agent)
+					# otherwise, set this new agent as the current target
+					else:
+						self.setTarget(agent, True)
+						
 
 	def setTarget(self, id, revenge):
-		self.current_target = {}
-		self.current_target["id"] = id
-		self.current_target["revenge"] = revenge
-		self.current_target["estimated"] = False
+		self.current_target = id
 
-
+		self.player_map[str(id)]["revenge"] = revenge
+		self.player_map[str(id)]["estimated"] = False
 
 def parseArgs(args):
 	usage = "usage: %prog [options]"
