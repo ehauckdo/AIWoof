@@ -44,4 +44,4 @@ def over():
 
 # 3
 def request(text):
-    return 'REQUEST(' + text + ''
+    return 'REQUEST(' + text + ')'
