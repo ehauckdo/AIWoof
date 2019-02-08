@@ -112,9 +112,9 @@ This guide will include keywords, sentences, operators and grammar related to th
 
 * List of keywords used for building sentences and their usage: 
 
-  * [subject], [target]: one of the agents playing the game (Agent0 ~ AgentN) ???
-  * [role]: 6 types of roles supported (VILLAGER, SEER, MEDIUM, BODYGUARD, WEREWOLF, POSSESSED)
-  * [species]: 2 types of species supported (HUMAN, WEREWOLF) ???
+  * [subject], [target]: one of the agents playing the game (Agent0 ~ AgentN or ANY or UNSPEC) 
+  * [role]: 6 types of roles supported (VILLAGER, SEER, MEDIUM, BODYGUARD, WEREWOLF, POSSESSED or ANY)
+  * [species]: 2 types of species supported (HUMAN, WEREWOLF or ANY) 
   * [verb]: 15 types of verbs allowed (full list below)
   * [talk number]: unique id for each sentence (composed by [day number] and [talk_id] for the sentence in that day) 
   * If ANY is specified for any of [subject][target][role][species]、then ANY can refer to any object in the set of [subject][target][role][species].
@@ -158,24 +158,28 @@ The two sentences above related to conversation flow can only be used as single 
 * Operators: used to frame sentences and link them to other subjects or sentences (8 types)
 
 	* [subject] REQUEST [target] ([sentence])
-
-Requests that target acts according to [sentence]. If [subject][target][role][species] in sentence is ANY, the action must be upon one of the available options of the set.
+		* Requests that [target] acts according to [sentence]. If [subject][target][role][species] in sentence is ANY, the action must be upon one of the available options of the set.
 
 	* [subject] INQUIRE [target] ([sentence])
+		* Inquires [target] about [sentence]. If ANY is not included in the sentence, [target] is simply asked if it agrees with the content. If ANY is included, it is required to answer with the appropriate object within the available objects of the set.
 
-Inquires target about [sentence]. If ANY is not included in the sentence, target is simply asked if it agrees with the content. If ANY is included, it is required to answer with the appropriate object within the available objects of the set.
+	* [subject] BECAUSE ([sentence1]) ([sentence2])  　　　　　　　　　 
+		* *(because of sentence1, subject is stating sentence2)*
 
-	* [subject] BECAUSE ([sentence1]) ([sentence2]) *(because of sentence1, subject is stating sentence2)*
-
-	* [subject] DAY [day_number] ([sentence]) *(on day [day_number], the situation described in [sentence] took place)*
+	* [subject] DAY [day_number] ([sentence])  　　　　　　　　　 
+		* *(on day [day_number], the situation described in [sentence] took place)*
 	
-	* [subject] NOT ([sentence]) *(negate sentence)*
+	* [subject] NOT ([sentence]) 　　　　　　　　　 
+		* *(negate sentence)*
 
-	* [subject] AND ([sentence1]) ([sentence2])... *(asserts that all sentences are true)*
+	* [subject] AND ([sentence1]) ([sentence2])...  　　　　　　　　　 
+		* *(asserts that all sentences are true)*
 
-	* [subject] OR ([sentence1]) ([sentence2]).... *(asserts that at least one sentence is true)*
+	* [subject] OR ([sentence1]) ([sentence2])....  　　　　　　　　　 
+		* *(asserts that at least one sentence is true)*
 
-	* [subject] XOR ([sentence1]) ([sentence2]) *(only one of the two sentences is true)*
+	* [subject] XOR ([sentence1]) ([sentence2])  　　　　　　　　　 
+		* *(only one of the two sentences is true)*
 
 * Grammar
 
@@ -184,7 +188,7 @@ Inquires target about [sentence]. If ANY is not included in the sentence, target
     * You can use an operator before a sentence
     * The sentence following an operator is delimited by parentheses. 
     * Although a [subject] is required, if omitted, the speaker is regarded as the subject.
-    * The speaker [subject] can be omitted (unspecified). It is recommended to omit the subject when appropriate to make the sentences shorter. However, note that every agent should be able to interpret sentences in the full or shortened format. When [subject] is omitted in sentences with a wide scope, [subject] is interpreted as the speaker. In the case of sentences with a narrow scope, it depends on the operator, as follows:
+    * The speaker [subject] can be omitted (UNSPEC). It is recommended to omit the subject when appropriate to make the sentences shorter. However, note that every agent should be able to interpret sentences in the full or shortened format. When [subject] is omitted in sentences with a wide scope, [subject] is interpreted as the speaker. In the case of sentences with a narrow scope, it will depend on the operator, as follows:
 
 		* REQUEST, INQUIRE: interpreted as the same as [target]
 		* Other cases: interpreted as the same as [subject]
@@ -192,13 +196,20 @@ Inquires target about [sentence]. If ANY is not included in the sentence, target
 
 * Example Sentences 
 
-	* COMINGOUT Agent1 SEER　 　　　　　　　*(a declaration that Agent1 is a seer)* 
-	* Agent0 COMINGOUT Agent0 SEER　　　　*(Agent0 declares himself as a seer)*
-	* DIVINED Agent1 HUMAN 　　　　　　　　　*(the divination shows that Agent1 is a Human)*
-	* Agent0 DIVINED Agent2 WEREWOLF　　　*(the divination by Agent0 shows that Agent2 is a Werewolf)*  
-	* REQUEST (Agent2 DIVINATION Agent3)　　*(a request is made to Agent2 to perform divination on Agent3)*
-	* GUARD Agent2 			　　　　　　　　　　　　　　*(to protect Agent2)*
-	* Agent1 REQUEST (Agent0 GUARD Agent3)　*(Agent1 requests that Agent0 protects Agent3)*
+	* COMINGOUT Agent1 SEER　 　　　　　　　 
+		* *(a declaration that Agent1 is a seer)* 
+	* Agent0 COMINGOUT Agent0 SEER　　　　 
+		* *(Agent0 declares himself as a seer)*
+	* DIVINED Agent1 HUMAN 　　　　　　　　　 
+		* *(the divination shows that Agent1 is a Human)*
+	* Agent0 DIVINED Agent2 WEREWOLF　　　 
+		* *(the divination by Agent0 shows that Agent2 is a Werewolf)*  
+	* REQUEST (Agent2 DIVINATION Agent3)　　　　　 
+		* *(a request is made to Agent2 to perform divination on Agent3)*
+	* GUARD Agent2 			　　　　　　　　　　　　　　　　　 
+		* *(to protect Agent2)*
+	* Agent1 REQUEST (Agent0 GUARD Agent3)　　　　 
+		* *(Agent1 requests that Agent0 protects Agent3)*
 
 * Example Sentences (using REQUEST)
 
@@ -256,7 +267,7 @@ Inquires target about [sentence]. If ANY is not included in the sentence, target
 	* Agent2 INQUIRE Agent1 (VOTED ANY) / Agent2 INQUIRE Agent1 (Agent1 VOTED ANY)  
 		* *(Agent2 asks Agent1 who Agent1 voted)*
 	* Agent2 INQUIRE Agent1 (VOTE ANY) / Agent2 INQUIRE Agent1 (Agent1 VOTE ANY)  
-		* *(Agent2 asks Agent1 who Agent1 is goinG to vote)*
+		* *(Agent2 asks Agent1 who Agent1 is going to vote)*
 	* Agent2 INQUIRE Agent1 (ESTIMATE Agent2 WEREWOLF) / Agent2 INQUIRE Agent1 (Agent1 ESTIMATE Agent2 WEREWOLF)  
 		* *(Agent2 asks Agent1 if Agent1 thinks he is a WEREWOLF)*
 
