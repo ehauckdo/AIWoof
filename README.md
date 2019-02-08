@@ -106,37 +106,40 @@ Once the server is set up and you have the required libraries, you can connect t
 
 You can also request a role to the server by passing -r [ROLE] as an argument (roles can be VILLAGER, SEER, MEDIUM, BODYGUARD, POSSESSED, WEREWOLF).
 
-# AIWolf Protocol Specification (ver2.01, 2017)
+# AIWolf Protocol Specification (ver3.6, 2019)
 
 This guide will include keywords, sentences, operators and grammar related to the protocol specification of the AIWolf competition. The official specification for the competition (in Japanese) can be found [here](http://aiwolf.org/control-panel/wp-content/uploads/2014/03/protocol_2017-2.pdf).
 
 * List of keywords used for building sentences and their usage: 
 
-  * [subject], [target]: one of the agents playing the game (Agent0 ~ AgentN) 
+  * [subject], [target]: one of the agents playing the game (Agent0 ~ AgentN) ???
   * [role]: 6 types of roles supported (VILLAGER, SEER, MEDIUM, BODYGUARD, WEREWOLF, POSSESSED)
-  * [species]: 2 types of species supported (HUMAN, WEREWOLF)
-  * [verb]: 13 types of verbs allowed (full list below)
+  * [species]: 2 types of species supported (HUMAN, WEREWOLF) ???
+  * [verb]: 15 types of verbs allowed (full list below)
   * [talk number]: unique id for each sentence (composed by [day number] and [talk_id] for the sentence in that day) 
+  * If ANY is specified for any of [subject][target][role][species]、then ANY can refer to any object in the set of [subject][target][role][species].
 
 * Sentences: (13 different types in total)
 
-  * Sentences that express ideas or intention from the player
+  * Sentences that express ideas or intention from the player (2 types)
   
     * [subject] ESTIMATE [target] [role] *(The [subject] is suggesting that [target] could be [role])*
     * [subject] COMINGOUT  [target][role] *(The [subject] is stating that [target] is [role])*
 
-  * Sentences for basic actions of a Werewolf game
+  * Sentences for basic actions of a Werewolf game (4 types)
   
     * [subject] DIVINATION [target]
     * [subject] GUARD [target]
     * [subject] VOTE [target]
     * [subject] ATTACK [target]
 
-  * Sentences that express the result of a certain action
+  * Sentences that express the result of a certain action (5 types)
 
     * [subject] DIVINED [target] [species]
     * [subject] IDENTIFIED [target] [species]*
     * [subject] GUARDED [target]
+    * [subject] VOTED [target]
+    * [subject] ATTACKED [target]
 
 *(keyword INQUESTED was used before 2017) 
 
@@ -150,13 +153,29 @@ This guide will include keywords, sentences, operators and grammar related to th
     * [subject] OVER *(finishes participation on to the current conversation)*
     * [subject] SKIP *(skip current round only)*
     
-For each of the previous sentences, the subject is always present before the verb. However, the subject can be omitted. In this case, the subject is determined by the context: if stated by a certain speaker, the subject becomes the speaker, otherwise it comes indefinite (all applicable players).
+The two sentences above related to conversation flow can only be used as single sentences, never in a nested manner.
 
-* Operators: used to frame sentences and link them to other subjects or sentences
+* Operators: used to frame sentences and link them to other subjects or sentences (8 types)
 
-	* [subject] REQUEST ([sentence])
+	* [subject] REQUEST [target] ([sentence])
 
-Same as in the previous section, subject can be also be omitted here.
+Requests that target acts according to [sentence]. If [subject][target][role][species] in sentence is ANY, the action must be upon one of the available options of the set.
+
+	* [subject] INQUIRE [target] ([sentence])
+
+Inquires target about [sentence]. If ANY is not included in the sentence, target is simply asked if it agrees with the content. If ANY is included, it is required to answer with the appropriate object within the available objects of the set.
+
+	* [subject] BECAUSE ([sentence1]) ([sentence2]) *(because of sentence1, subject is stating sentence2)*
+
+	* [subject] DAY [day_number] ([sentence]) *(on day [day_number], the situation described in [sentence] took place)*
+	
+	* [subject] NOT ([sentence]) *(negate sentence)*
+
+	* [subject] AND ([sentence1]) ([sentence2])... *(asserts that all sentences are true)*
+
+	* [subject] OR ([sentence1]) ([sentence2]).... *(asserts that at least one sentence is true)*
+
+	* [subject] XOR ([sentence1]) ([sentence2]) *(only one of the two sentences is true)*
 
 * Grammar
 
@@ -165,6 +184,11 @@ Same as in the previous section, subject can be also be omitted here.
     * You can use an operator before a sentence
     * The sentence following an operator is delimited by parentheses. 
     * Although a [subject] is required, if omitted, the speaker is regarded as the subject.
+    * The speaker [subject] can be omitted (unspecified). It is recommended to omit the subject when appropriate to make the sentences shorter. However, note that every agent should be able to interpret sentences in the full or shortened format. When [subject] is omitted in sentences with a wide scope, [subject] is interpreted as the speaker. In the case of sentences with a narrow scope, it depends on the operator, as follows:
+
+		* REQUEST, INQUIRE: interpreted as the same as [target]
+		* Other cases: interpreted as the same as [subject]
+
 
 * Example Sentences 
 
@@ -175,6 +199,79 @@ Same as in the previous section, subject can be also be omitted here.
 	* REQUEST (Agent2 DIVINATION Agent3)　　*(a request is made to Agent2 to perform divination on Agent3)*
 	* GUARD Agent2 			　　　　　　　　　　　　　　*(to protect Agent2)*
 	* Agent1 REQUEST (Agent0 GUARD Agent3)　*(Agent1 requests that Agent0 protects Agent3)*
+
+* Example Sentences (using REQUEST)
+
+	* REQUEST Agent1 (ESTIMATE Agent2 [role]) 
+		* *(requests Agent1 to estimate Agent2 as [role])*
+	* REQUEST ANY (ESTIMATE Agent1 [role])  
+		* *(requests everyone/someone to estimate Agent1 as [role])*
+	* REQUEST Agent1 (COMINGOUT Agent2 [role])  
+		* *(requests Agent1 to announce the role of Agent2 as [role])*
+	* REQUEST ANY (COMINGOUT Agent1 [role])  
+		* *(requests everyone/someone tto announce the role of Agent1 as [role])*
+	* REQUEST Agent1 (DIVINATION Agent2)  
+		* *(requests Agent1 to perform divination on Agent2)*
+	* REQUEST ANY (DIVINATION Agent1)  
+		* *(requests everyone/someone to perform divination on Agent1)*
+	* REQUEST Agent1 (GUARD Agent2)  
+		* *(requests Agent1 to protect Agent2)*
+	* REQUEST ANY (GUARD Agent2)  
+		* *(requests everyone/someone to protect Agent2)*
+	* REQUEST Agent1 (VOTE Agent2)  
+		* *(requests Agent1 to vote on Agent2)*
+	* REQUEST ANY (VOTE Agent2)  
+		* *(requests everyone/someone to vote on Agent2)*
+	* REQUEST Agent1 (ATTACK Agent2)  
+		* *(requests Agent1 to attack Agent2)*
+	* REQUEST ANY (Attack Agent1)  
+		* *(requests everyone/someone to attack Agent1)*
+	* REQUEST Agent1 (DIVINED Agent2 [species])  
+		* *(requests Agent1 to announce the result of a divination in which Agent2 is releaved as [species])*
+	* REQUEST ANY (DIVINED Agent2 [species])  
+		* *(requests everyone/someone to announce the result of a divination in which Agent2 is releaved as [species])*
+	* REQUEST Agent1 (IDENTIFIED Agent2 [species])  
+		* *(requests Agent1 to state that Agent2 was identified as [species] after dying)*
+	* REQUEST ANY (IDENTIFIED Agent2 [species])  
+		* *(requests everyone/someone to state that Agent2 was identified as [species] after dying)*
+	* REQUEST Agent1 (GUARDED Agent2)  
+		* *(requests that Agent1 state that he has protected Agent2)*
+	* REQUEST ANY (GUARDED Agent2)  
+		* *(requests everyone/someone to state that he has protected Agent2)*
+	* REQUEST Agent1 (AGREE [talk number])  
+		* *(requests that Agent1 state that he agrees with [talk number])*
+	* REQUEST ANY (AGREE [talk number])  
+		* *(requests everyone/someone to state that they agree with [talk number])*
+	* REQUEST Agent1 (DISAGREE [talk number])  
+		* *(requests that Agent1 state that he disagrees with [talk number])*
+	* REQUEST ANY (DISAGREE [talk number])  
+		* *(requests everyone/someone to state that they disagree with [talk number])*
+
+* Exemple Sentences (using BECAUSE)
+
+	* Agent2 BECAUSE (DAY 1 Agent1 vote Agent2) (vote Agent1) *(Agent2 is voting on Agent1 because on DAY 1 Agent 1 voted on Agent2)*
+
+* Example Sentences (using INQUIRE)
+
+	* Agent2 INQUIRE Agent1 (VOTED ANY) / Agent2 INQUIRE Agent1 (Agent1 VOTED ANY)  
+		* *(Agent2 asks Agent1 who Agent1 voted)*
+	* Agent2 INQUIRE Agent1 (VOTE ANY) / Agent2 INQUIRE Agent1 (Agent1 VOTE ANY)  
+		* *(Agent2 asks Agent1 who Agent1 is goinG to vote)*
+	* Agent2 INQUIRE Agent1 (ESTIMATE Agent2 WEREWOLF) / Agent2 INQUIRE Agent1 (Agent1 ESTIMATE Agent2 WEREWOLF)  
+		* *(Agent2 asks Agent1 if Agent1 thinks he is a WEREWOLF)*
+
+* Example Sentences (using ANY)
+
+Using ANY in a statement is equivalent to using the same statement with all available options expanded and joined by OR: 
+
+Agent2 INQUIRE Agent1 (VOTED ANY)
+is equivalent to
+Agent2 INQUIRE Agent1 (OR (VOTED Agent1) (VOTED Agent2) (VOTED Agent3)…)
+
+REQUEST ANY (DIVINED [agent] [species])
+is equivalent to
+OR (REQUEST Agent1 (DIVINED [agent] [species])) (REQUEST Agent2 (DIVINED [agent]
+[species])) (REQUEST Agent2 (DIVINED [agent] [species]))…
 
 * How requests are interpreted
 	
