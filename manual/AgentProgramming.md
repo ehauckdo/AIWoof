@@ -15,7 +15,7 @@ Your agent class is required to implement a number of functions that will be cal
 
 `dayStart(self)`: called at the start of the day.  Returns `None`.
 
-`talk/whisper(self)`: should return a full sentence according to the protocol in the string format (the content builder library can be used to generate valid sentences). Returns `str`.
+`talk/whisper(self)`: should return a full sentence according to the protocol in the string format (the content builder can be used to generate valid sentences). Returns `str`.
 
 `vote/attack/divine/guard(self)`: should return an ID (integer) of one of the agents. Returns `int`.
 
@@ -65,6 +65,7 @@ game_setting Example:
 
 * base_info: contains basic information available to your agent at the current state of the game.
 <!--- 
+I don't think this individual explanation is necessary but for now let's leave it commented out
 	* agentIdx: your agent ID (`int` format)
 	* `statusMap`: contains the status ("DEAD" or "ALIVE") of each agent. It's a dictionary with pairs of key values in the format ID - Status. Note that ID is in `str` format
 	* `remainTalkMap`: how many more sentences the agent can issue at the current state of the current phase.  Note that ID is in `str` format
