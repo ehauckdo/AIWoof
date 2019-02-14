@@ -9,19 +9,21 @@ First and foremost you must `import aiwolfpy` in your script. Once that is done,
 
 Your agent class is required to implement a number of functions that will be called by the aiwolfpy library.
 
-getName(self): returns the name of the agent (string)
+`getName(self)`: returns the name of the agent (string)
 
-initialize(self, base_info, diff_data, game_setting): this function is called before a game starts. base_info, diff_data and game_setting contains importanto information about the current game. The contents of it are described in the next section. Note that this function is different from the __init__ one.
+`initialize(self, base_info, diff_data, game_setting)`: this function is called before a game starts. base_info, diff_data and game_setting contains important information about the current game. The contents of it are described in the next section. Note that this function is different from the __init__ one. Returns `None`.
 
-update(self, base_info, diff_data, request): this function is always called just before the agent is requested to provide some information (e.g. a statement for the current day phase). 
+`dayStart(self)`: called at the start of the day.  Returns `None`.
 
-dayStart(self): called at the start of the day. 
+`talk/whisper(self)`: should return a full sentence according to the protocol in the string format (the content builder library can be used to generate valid sentences). Returns `str`.
 
-talk, whisper: should return a full sentence according to the protocol in the string format (the content builder library can be used to generate valid sentences)
+`vote/attack/divine/guard(self)`: should return an ID (integer) of one of the agents. Returns `int`.
 
-vote, attack, divine, guard: should return an ID (integer) of one of the agents
+`finish(self)`: called when the game finishes. Returns `None`.
 
-finish(self): called when the game finishes
+`update(self, base_info, diff_data, request)`: after `initialize` is called and the game starts, the aiwolfpy library always make pair of calls to your agent: first the update function, and then some other function (e.g. talk). The update allows your agent to process new information from the environment, while the second function represents the actual action your agent has to perform at that point of the game. Returns `None`.
+
+
 
 ## Content builder
 
@@ -29,11 +31,93 @@ The content builder file within the aiwolfpy library allows the generation of va
 
 ## Information received from the server
 
- * base_info: 
- 
- * diff_data:
- 
- * game_setting:
+All information received from the server are either in the format of nested dictionaries or pandas dataframes. 
 
+ * game_setting: contains a number of settings related to the current came as specified the AIWolf server, such as number of players, how many times an agent can talk per day, etc. 
+
+```
+game_setting Example:
+{
+    "maxRevote": 1, 
+    "randomSeed": 1548825638306, 
+    "validateUtterance": true, 
+    "enableNoExecution": false, 
+    "roleNumMap": {
+        "BODYGUARD": 0, 
+        "MEDIUM": 0, 
+        "SEER": 1, 
+        "WEREWOLF": 1, 
+        "POSSESSED": 1, 
+        "VILLAGER": 2, 
+        "FOX": 0, 
+        "FREEMASON": 0
+    }, 
+    "votableInFirstDay": false, 
+    "maxSkip": 2, 
+    "timeLimit": -1, 
+    "maxWhisper": 10, 
+    "maxWhisperTurn": 20, 
+    "whisperBeforeRevote": false, 
+    "maxTalkTurn": 20, 
+    "playerNum": 5, 
+    "voteVisible": true, 
+    "maxAttackRevote": 1, 
+    "talkOnFirstDay": false, 
+    "enableNoAttack": false, 
+    "maxTalk": 10
+}
+```
+
+* base_info: contains basic information available to your agent at the current state of the game.
+<!--- 
+	* agentIdx: your agent ID (`int` format)
+	* `statusMap`: contains the status ("DEAD" or "ALIVE") of each agent. It's a dictionary with pairs of key values in the format ID - Status. Note that ID is in `str` format
+	* `remainTalkMap`: how many more sentences the agent can issue at the current state of the current phase.  Note that ID is in `str` format
+	* `remainWhisperMap`: similar to previous one, in this case for Werewolf during the night phase.  Note that ID is in `str` format
+	* `roleMap`: when a werewolf, you can identify other werewolf places from this dictionary.  Note that ID is in `str` format
+	* `myRole`: your role in the current game in `str` format
+	* `day`: the current day of the game (`int` format)
+ --->
+ ```
+ # base_info Example:
+ {
+    "agentIdx": 5, 
+    "statusMap": {
+        "1": "ALIVE", 
+        "3": "ALIVE", 
+        "2": "ALIVE", 
+        "5": "DEAD", 
+        "4": "ALIVE"
+    }, 
+    "remainTalkMap": {		# How many statements each agent can still issue at the current turn
+        "1": 10, 
+        "3": 10, 
+        "2": 10, 
+        "4": 10
+    }, 
+    "remainWhisperMap": {}, 	# same as remainTalkMap, but in the case of whisper for werewolves
+    "roleMap": {  		# when a werewolf, use this dict to find other werewolves
+        "5": "WEREWOLF"
+    }, 
+    "myRole": "WEREWOLF", 
+    "day": 2
+}
+```
  
+ * diff_data: A pandas dataframe that contains every new information since last communication with server. The `idx` header represents the order in which the events occurred.
+ 
+ ```
+diff_data Example:
++----+---------+-------+-------+-----------------------------+--------+--------+
+|    |   agent |   day |   idx | text                        |   turn | type   |
+|----+---------+-------+-------+-----------------------------+--------+--------|
+|  0 |       2 |     1 |    10 | Skip                        |      2 | talk   |
+|  1 |       4 |     1 |    11 | ESTIMATE Agent[05] WEREWOLF |      2 | talk   |
+|  2 |       5 |     1 |    12 | VOTE Agent[02]              |      2 | talk   |
+|  3 |       3 |     1 |    13 | Skip                        |      2 | talk   |
+|  4 |       1 |     1 |    14 | DIVINED Agent[04] HUMAN     |      2 | talk   |
++----+---------+-------+-------+-----------------------------+--------+--------+
+ ```
+ 
+
  
