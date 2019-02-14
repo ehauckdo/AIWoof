@@ -24,10 +24,37 @@ Your agent class is required to implement a number of functions that will be cal
 `update(self, base_info, diff_data, request)`: after `initialize` is called and the game starts, the aiwolfpy library always make pair of calls to your agent: first the update function, and then some other function (e.g. talk). The update allows your agent to process new information from the environment, while the second function represents the actual action your agent has to perform at that point of the game. Returns `None`.
 
 
-
 ## Content builder
 
 The content builder file within the aiwolfpy library allows the generation of valid sentences according to the AIWolf protocol specification.
+
+The following functions are provided by aiwolfpy (ordered according to the protocol specification document): 
+
+* 2.1 Sentences that express knowledge or intent
+
+	* estimate/comingout(target, role): passes a target id (type `int`) and a role (type `str`), returns a sentence in the format: ```ESTIMATE Agent[0] WEREWOLF```
+
+* 2.2 Sentences about actions of the Werewolf game
+
+	* `divine/guard/vote/attack(target)`: passes a target id (type `int`), returns a sentence in the format: ```DIVINE Agent[0] ```
+
+* 2.3 Sentences about the result of past actions
+
+	* `divined/identified(target, species)`: passes a target id (type `int`) and a species (type `str`), returns a sentence in the format: ```DIVINED Agent[0] HUMAN ```
+
+	* `guarded(target)`: passes a target id (type `int`), returns a sentence of type ```GUARDED Agent[0] ```
+
+* 2.4 Sentences that express agreement or disagreement
+
+	* agree/disagree(talktype, day, id): passes a talktype (????), a day (type `int`) and an id (type `str`), returns a sentence in the format: ```AGREE talktype Day day ID: id```
+
+* 2.5 Sentences related to the flow of the conversation
+
+	* skip/over(): no parameter required, simply returns `Skip` or `Over`.
+
+* 3 Operators for directed requests of action and information
+
+	* request(text): passes a sentence built with one of the previous functions, and returns a sentence in the format: `REQUEST (text)`
 
 ## Information received from the server
 
